@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>GitHub Analysis</title>
+</head>
+<body>
+    <h1>GitHub Analysis</h1>
+    <form id="githubForm">
+        <label for="githubUrl">GitHub User URL:</label>
+        <input type="text" id="githubUrl" name="githubUrl" required>
+        <button type="submit">Analyze</button>
+    </form>
+    <div id="results"></div>
+
+    <script>
+        const form = document.getElementById("githubForm");
+        const resultsDiv = document.getElementById("results");
+
+        form.addEventListener("submit", async (event) => {
+            event.preventDefault();
+            const githubUrl = document.getElementById("githubUrl").value;
+            resultsDiv.textContent = "Analyzing...";
+
+            // Send the GitHub URL to the backend for analysis
+            const response = await fetch(`/analyze?githubUrl=${encodeURIComponent(githubUrl)}`);
+            const data = await response.json();
+
+            // Display the results on the page
+            resultsDiv.innerHTML = `
+                <p>Most Complex Repository: <a href="${data.repositoryLink}" target="_blank">${data.repositoryName}</a></p>
+                <p>GPT Analysis: ${data.gptAnalysis}</p>
+            `;
+        });
+    </script>
+</body>
+</html>
